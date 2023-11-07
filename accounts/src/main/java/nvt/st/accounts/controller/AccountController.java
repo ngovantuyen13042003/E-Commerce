@@ -25,11 +25,39 @@ public class AccountController {
                 .body(new ResponseDTO(AccountsConstants.STATUS_201, AccountsConstants.MESSAGE_201));
     }
 
-
     @GetMapping("/fetch")
     public ResponseEntity<CustomerDTO> fetchAccountDetail(@RequestParam String phoneNumber) {
-
-
-        return
+        CustomerDTO customerDTO = iAccountService.fetchAccount(phoneNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(customerDTO);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDTO> updateAccountDetail(@RequestBody CustomerDTO customerDTO) {
+        boolean isUpdate = iAccountService.updateAccount(customerDTO);
+        if(isUpdate) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDTO(AccountsConstants.STATUS_200, AccountsConstants.MESSAGE_200));
+        }else {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(AccountsConstants.STATUS_500, AccountsConstants.MESSAGE_500));
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseDTO> deleteAccountDetail(@RequestParam String phoneNumber) {
+        boolean isDelete = iAccountService.deleteAccount(phoneNumber);
+        if(isDelete) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDTO(AccountsConstants.STATUS_200, AccountsConstants.MESSAGE_200));
+        }else {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDTO(AccountsConstants.STATUS_500, AccountsConstants.MESSAGE_500));
+        }
+    }
+
+
 }
